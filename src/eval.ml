@@ -76,7 +76,13 @@ let rec eval (env : env ) (expr : expr) : value =
 	| (Vbool false) -> eval env e3 
 	| _ -> raise Wrong_args )
     | Fct (arg, e) -> Vclosure (arg, e, env)
+    | Fctrec (sym, arg, e) -> let new_env = Env ((sym, (Fctrec (sym, arg, e), env)), env) in
+			      Vclosure (arg, e, new_env)
     | Appl (e1, e2) -> ( match eval env e1 with
 	Vclosure (arg, ep, ev) ->
 	  eval (Env ((arg, (e2, env)), ev)) ep )
     | Decl (sym, e1, e2) -> eval (Env ((sym, (e1, env)), env)) e2
+    | Declrec (sym, e1, e2) -> (
+      match e1 with
+	  Fct (arg, e) -> eval (Env ((sym, (Fctrec(sym, arg, e), env)), env)) e2
+	| _ -> raise Wrong_args )

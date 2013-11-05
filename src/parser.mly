@@ -19,6 +19,7 @@
 %left EQ LT OR AND NOT
 %left PLUS MINUS
 %left PROD DIV
+%left APPLY
 
 %%
 
@@ -31,9 +32,10 @@ expr:
 | SYMBOL { Symbol $1 }
 | BOOL { Bool $1 }
 | NOT expr { Not($2) }
-| expr expr %prec LPAREN { Appl($1, $2) }
+| expr expr %prec APPLY { Appl($1, $2) }
 | LPAREN expr RPAREN { $2 }
 | LET SYMBOL EQ expr IN expr { Decl($2, $4, $6) }
+| LET REC SYMBOL EQ expr IN expr { Declrec($3, $5, $7) }
 | LET SYMBOL EQ expr { Def($2, $4) }
 | FUN SYMBOL ARROW expr { Fct($2, $4) }
 | IF expr THEN expr ELSE expr { If($2, $4, $6) }
@@ -46,6 +48,6 @@ expr:
 | expr LT expr { Binop (Lt, $1, $3) }
 | expr OR expr { Binop (Or, $1, $3) }
 | expr AND expr { Binop (And, $1, $3) }
-| expr BINOP expr { Binop ($2, $1, $3) }
 | expr EQ expr { Binop(Eq, $1, $3) }
+| expr BINOP expr { Binop ($2, $1, $3) }
 ;

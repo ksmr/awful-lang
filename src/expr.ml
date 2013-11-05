@@ -13,11 +13,13 @@ type expr = Int of int
 	    | Bool of bool
 	    | Symbol of string
 	    | Decl of string*expr*expr
+	    | Declrec of string*expr*expr
 	    | Def of string*expr
 	    | Not of expr
 	    | Binop of binop*expr*expr
 	    | If of expr*expr*expr
 	    | Fct of string*expr
+	    | Fctrec of string*string*expr
 	    | Appl of expr*expr
 
        
