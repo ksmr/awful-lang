@@ -15,6 +15,7 @@ type expr = Int of int
 	    | Decl of string*expr*expr
 	    | Declrec of string*expr*expr
 	    | Def of string*expr
+	    | Defrec of string*expr
 	    | Not of expr
 	    | Binop of binop*expr*expr
 	    | If of expr*expr*expr

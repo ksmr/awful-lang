@@ -9,11 +9,12 @@
 %token <Expr.binop> BINOP
 %token PLUS MINUS PROD DIV RPAREN LPAREN EOF UMINUS
 %token EQ LT OR AND NOT
-%token LET IN FUN REC ARROW FUNTERM
+%token LET IN FUN REC ARROW TERMINATOR
 %token IF THEN ELSE
 
 %start top
-%type <Expr.expr> top
+%type <Expr.expr list> top
+%type <Expr.expr> expr
 
 %left LPAREN RPAREN
 %left EQ LT OR AND NOT
@@ -23,8 +24,11 @@
 
 %%
 
-top:
-| expr EOF { $1 };
+top: 
+| EOF { [] }
+| expr TERMINATOR EOF { [$1] }
+| expr TERMINATOR top { $1::$3 }
+| expr EOF { [$1] };
   
 expr:
 | INT { Int $1 }
@@ -37,6 +41,9 @@ expr:
 | LET SYMBOL EQ expr IN expr { Decl($2, $4, $6) }
 | LET REC SYMBOL EQ expr IN expr { Declrec($3, $5, $7) }
 | LET SYMBOL EQ expr { Def($2, $4) }
+| LET REC SYMBOL EQ expr { Defrec($3, $5) }
+| LET BINOP EQ expr IN expr { let Custom s = $2 in Decl (s, $4, $6) }
+| LET BINOP EQ expr { let Custom s = $2 in Def (s, $4) }
 | FUN SYMBOL ARROW expr { Fct($2, $4) }
 | IF expr THEN expr ELSE expr { If($2, $4, $6) }
 | expr PLUS expr { Binop (Plus, $1, $3) }
@@ -51,3 +58,5 @@ expr:
 | expr EQ expr { Binop(Eq, $1, $3) }
 | expr BINOP expr { Binop ($2, $1, $3) }
 ;
+
+

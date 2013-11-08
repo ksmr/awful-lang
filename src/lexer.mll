@@ -27,7 +27,7 @@ rule lex = parse
   | "rec" { REC }
   | "let" { LET }
   | "in" { IN }
-  | ";;" { FUNTERM }
+  | ";;" { TERMINATOR }
   | "if" { IF }
   | "then" { THEN }
   | "else" { ELSE }
