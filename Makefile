@@ -4,10 +4,16 @@ LEX=ocamllex
 SRC=src/
 OPTS=-I $(SRC)
 
-all: picoML
+all: awful
 
-picoML: expr.cmo eval.cmo parser.cmo lexer.cmo repl.cmo
-	$(COMPILER) $(OPTS) -o awful eval.cmo expr.cmo parser.cmo lexer.cmo repl.cmo
+awful: expr.cmo eval.cmo parser.cmo lexer.cmo repl.cmo run.cmo main.cmo
+	$(COMPILER) $(OPTS) -o awful eval.cmo expr.cmo parser.cmo lexer.cmo repl.cmo run.cmo main.cmo
+
+main.cmo:
+	$(COMPILER) $(OPTS) -c $(SRC)/main.ml
+
+run.cmo:
+	$(COMPILER) $(OPTS) -c $(SRC)/run.ml
 
 expr.cmo:
 	$(COMPILER) $(OPTS) -c $(SRC)/expr.ml

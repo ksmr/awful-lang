@@ -96,3 +96,29 @@ let rec eval (env : env ) (expr : expr) =
 	  Fct (arg, ex) -> Change_env (sym, (Fctrec (sym,arg,ex), env))
 	| _ -> raise Wrong_args
     )
+
+let print_value (v : value) : unit =
+  print_string "==> ";
+  match v with
+      (Vint i) -> ( print_int i;
+		    print_newline ();
+       )
+    | (Vbool b) -> ( print_string (string_of_bool b);
+		     print_newline ();
+    )
+    | (Vfloat f) -> ( print_float f;
+		      print_newline ();
+    )
+    | (Vclosure (arg, exp, env)) -> ( print_string "function";
+				      print_newline ();
+    )
+    | _ -> print_newline ();;
+
+
+let rec eval_list (env : env) (handler : value -> unit) (l : expr list) : env =
+  match l with
+      [] -> env
+    | e::t -> match eval env e with
+	Return_val v -> ( handler v;
+			  eval_list env handler t )
+	| Change_env g -> eval_list (Env (g, env)) handler t
