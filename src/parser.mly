@@ -44,6 +44,7 @@ expr:
 | FUN args ARROW expr { List.fold_left (fun e x -> Fct(x, e)) (Fct(List.hd $2, $4)) (List.tl $2) }
 | IF expr THEN expr ELSE expr { If($2, $4, $6) }
 | MINUS INT { Int ((-1)*$2) }
+| bool_op { $1 }
 | expr PLUS expr { Binop (Plus, $1, $3) }
 | expr MINUS expr { Binop (Minus, $1, $3) }
 | expr PROD expr { Binop (Prod, $1, $3) }
@@ -74,5 +75,4 @@ bool_op:
 | NOT expr { Not($2) }
 | expr OR expr { Binop (Or, $1, $3) }
 | expr AND expr { Binop (And, $1, $3) }
-
 

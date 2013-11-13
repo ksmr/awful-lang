@@ -5,7 +5,7 @@
 
 let letter = ['a'-'z' 'A'-'Z']
 let digit = ['0' - '9']
-let binop_symbols = "+" | "*" | "-" | "/" | "<" | ">" | "|" | ":" | "@" | "." | "&" | "$"
+let binop_symbols = "+" | "*" | "-" | "/" | "<" | ">" | "|" | ":" | "@" | "." | "&" | "$" | "="
 
 rule lex = parse
   | [' ' '\t' '\n' '\r'] {lex lexbuf}
